@@ -7,7 +7,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [authState, setAuthState] = useState({
         authMode: AUTH_MODES.LOG_IN, // login, signup, null
-        isAuth: true,
+        isAuth: false,
         userName: null,
         userId: null
       });

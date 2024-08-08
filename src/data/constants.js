@@ -17,3 +17,21 @@ export const AUTH_BTN_CAPTION = {
 export const LOGO_NAME = {
     TEXT: 'Recognize'
 };
+
+export const AUTH_HEADING = {
+    MAIN : {
+        LOG_IN: 'Log in to your account',
+        SIGN_UP: 'Create an account',
+    },
+    SUB: {
+        LOG_IN: 'Welcome back to Recognize',
+        SIGN_UP: 'Welcome to Recognize',
+    }
+};
+
+export const VALIDATION_TYPE  = {
+    REQUIRE: 'require',
+    EMAIL: 'email',
+    PASSWORD: 'password',
+    SELECTED:'selected'
+}
