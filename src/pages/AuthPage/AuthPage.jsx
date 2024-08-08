@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { MdOutlineWavingHand } from "react-icons/md";
+import axios from 'axios';
 
 
 import { AuthContext } from '../../helper/AuthContext';
@@ -37,15 +38,30 @@ const AuthPage = () => {
         return value.length >= 6 ? '' : 'Password must be at least 6 characters';
       };
 
-    const authSubmitHandler = (e) => {
+    const authSubmitHandler = async (e) => {
         e.preventDefault();
-        console.log('The form is submitted')
+        console.log('The form is submitted');
+        console.log(formData);
+        const response = await axios({
+            method: 'POST',
+            data: {
+                email: formData.email.value,
+                password: formData.password.value,
+                username: formData.username.value,
+            },
+            // withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            url: 'http://localhost:8080/user/signup',
+          });
+        console.log(response);
     }
 
     return (
         <section className='authpage'>
             <h1 className='authpage__heading'>{authMode === AUTH_MODES.SIGN_UP ? AUTH_HEADING.MAIN.SIGN_UP : AUTH_HEADING.MAIN.LOG_IN }</h1>
-            <div classname='authpage__subheading-wrapper'>
+            <div className='authpage__subheading-wrapper'>
                 <MdOutlineWavingHand className='authpage__icon' title='waving hand' size='1.5rem'/>
                 <p className='authpage__subheading'>{authMode === AUTH_MODES.SIGN_UP ? AUTH_HEADING.SUB.SIGN_UP : AUTH_HEADING.SUB.LOG_IN }</p>
             </div>

@@ -30,7 +30,7 @@ const Input = ({id, type = 'text', label, placeholder, value,  classInput = '', 
                 onChange={onChange}
                 onBlur={onBlur}
                 className = {`${classInput}__input`}
-                autocomplete = 'off'
+                autoComplete = 'off'
             />
             {type === 'password' && (
                 <button type="button" onClick={togglePasswordVisibility}>
