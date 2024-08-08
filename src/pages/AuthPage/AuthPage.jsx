@@ -45,9 +45,9 @@ const AuthPage = () => {
         const response = await axios({
             method: 'POST',
             data: {
-                email: formData.email.value,
-                password: formData.password.value,
-                username: formData.username.value,
+                email: formData.email,
+                password: formData.password,
+                username: formData.username,
             },
             // withCredentials: true,
             headers: {
