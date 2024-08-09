@@ -49,7 +49,6 @@ const AuthPage = () => {
     };
 
     const loginHandler = async (email, password) => {
-        setIsValid(false);
         console.log(email, password)
         try {
             const response = await login(email, password);
