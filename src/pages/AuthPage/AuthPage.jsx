@@ -1,61 +1,90 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+
 import { MdOutlineWavingHand } from "react-icons/md";
-import axios from 'axios';
-
-
 import { AuthContext } from '../../helper/AuthContext';
-import { AUTH_MODES, AUTH_HEADING, VALIDATION_TYPE } from '../../data/constants';
+import { AUTH_MODES, AUTH_HEADING } from '../../data/constants';
+import { validation } from '../../helper/validator.js';
+import { login, signup } from '../../helper/api';
 
 import './AuthPage.scss';
 import Input from '../../components/Input/Input';
-
+import Button from '../../components/Button/Button';
 
 
 const AuthPage = () => {
     const { authState, setAuthState } = useContext(AuthContext);
-    const { isAuth, authMode } = authState;
-    const [ formData, setFormData ] = useState({
-        email: '',
-        password: '',
-        username: ''
-    })
+    const { authMode } = authState;
 
-    const handleChange = (e) => {
+    const [errors, setErrors] = useState({});
+    const [errorMessage, setErrorMessage] = useState({});
+    const [isValid, setIsValid] = useState(false);
+    const [formData, setFormData] = useState({ username: '', email: '',password: ''});
+
+
+    const handleOnChange = (e) => {
         const { id, value } = e.target;
-        console.log(id)
-        setFormData((prevData) => ({
-          ...prevData,
+        setFormData((prevFormData) => ({
+          ...prevFormData,
           [id]: value,
         }));
-      };
+    };
 
-      const validateEmail = (value) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(value) ? '' : 'Invalid email address';
-      };
+    const handleBlur = () => {
+        // console.log(formData)
+        // const validationErrors = validation(formData);
+        // setErrors(validationErrors);
+        // console.log(errors);
+        // setIsValid(Object.keys(validationErrors).length === 0);
+        if (authMode === AUTH_MODES.LOG_IN) {
+            const { username, ...validationErrors } = validation(formData);
+            setErrors(validationErrors);
+            console.log(validationErrors)
+            setIsValid(Object.keys(validationErrors).length === 0);
+            console.log(isValid);
+        } else if (authMode === AUTH_MODES.SIGN_UP) {
+            const validationErrors = validation(formData);
+            setErrors(validationErrors);
+            setIsValid(Object.keys(validationErrors).length === 0);
+        }
+    };
 
-      const validatePassword = (value) => {
-        return value.length >= 6 ? '' : 'Password must be at least 6 characters';
-      };
+    const loginHandler = async (email, password) => {
+        setIsValid(false);
+        console.log(email, password)
+        try {
+            const response = await login(email, password);
+            console.log(response)
+        } catch (error) {
+            console.log(error);
+            setErrorMessage(error.response.data.message);
+        }
+    }
+
+    const signupHandler = async (username, email, password) => {
+        try {
+            const response = await signup({ username, email, password });
+            console.log(response.data)
+        } catch (error) {
+            console.log(error);
+            setErrorMessage(error.response.data.message);
+        }
+    }
 
     const authSubmitHandler = async (e) => {
-        e.preventDefault();
-        console.log('The form is submitted');
-        console.log(formData);
-        const response = await axios({
-            method: 'POST',
-            data: {
-                email: formData.email,
-                password: formData.password,
-                username: formData.username,
-            },
-            // withCredentials: true,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            url: 'http://localhost:8080/user/signup',
-          });
-        console.log(response);
+        e.preventDefault(); 
+
+        const validationErrors = validation(formData);
+        setErrors(validationErrors);
+
+        if (Object.keys(validationErrors).length === 0) {
+            if (authMode === AUTH_MODES.LOG_IN) {
+
+                loginHandler (formData.email, formData.password);
+
+            } else if (authMode === AUTH_MODES.SIGN_UP) {
+                signupHandler(formData.username, formData.email, formData.password);
+            }
+        }
     }
 
     return (
@@ -73,8 +102,9 @@ const AuthPage = () => {
                     label='Full name' 
                     value={formData.username} 
                     classInput = 'authpage' 
-                    onChange={handleChange}
-                    validate={validateEmail}
+                    onChange={handleOnChange}
+                    onBlur={handleBlur}
+                    error={errors.username}
                 />}
                 <Input 
                     id='email' 
@@ -82,8 +112,9 @@ const AuthPage = () => {
                     label='Email' 
                     value={formData.email} 
                     classInput = 'authpage' 
-                    onChange={handleChange }
-                    validate={validateEmail}
+                    onChange={handleOnChange}
+                    onBlur={handleBlur}
+                    error={errors.email}
                 />
                 <Input 
                     id='password' 
@@ -91,10 +122,11 @@ const AuthPage = () => {
                     label='Password' 
                     value={formData.password} 
                     classInput = 'authpage' 
-                    onChange={handleChange}
-                    validate={validatePassword}
+                    onChange={handleOnChange}
+                    onBlur={handleBlur}
+                    error={errors.password}
                 />
-                <button onClick={authSubmitHandler}>Submit</button>
+                <Button type='submit' handleOnClick={authSubmitHandler} disabled={!isValid}>Submit</Button>
             </form>
         </section>
     );

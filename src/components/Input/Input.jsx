@@ -1,23 +1,16 @@
 import React, { useState } from 'react';
 
-const Input = ({id, type = 'text', label, placeholder, value,  classInput = '', onChange,  onBlur = null, errorMessage = '', validate, ...props}) => {
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
+
+import Button from '../Button/Button';
+
+const Input = ({id, type = 'text', label, placeholder, value,  classInput = '', onChange, onBlur, error, ...props}) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [error, setError] = useState('');
 
      // Handle password visibility toggle
     const togglePasswordVisibility = () => {
-        setIsPasswordVisible(!isPasswordVisible);
+        setIsPasswordVisible(prevIsPasswordVisiable => !prevIsPasswordVisiable);
     };
-
-    const handleBlur = (event) => {
-        if (validate) {
-          const validationError = validate(event.target.value);
-          setError(validationError);
-        }
-        if (onBlur) {
-          onBlur(event);
-        }
-      };
     
     return (
         <>
@@ -28,14 +21,14 @@ const Input = ({id, type = 'text', label, placeholder, value,  classInput = '', 
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                onBlur={onBlur}
+                onBlur = {onBlur}
                 className = {`${classInput}__input`}
                 autoComplete = 'off'
             />
             {type === 'password' && (
-                <button type="button" onClick={togglePasswordVisibility}>
-                    {isPasswordVisible ? 'Hide' : 'Show'}
-                </button>
+                <Button handleOnClick={togglePasswordVisibility}>
+                    {isPasswordVisible ? < MdOutlineVisibility/> : < MdOutlineVisibilityOff/>}
+                </Button>
             )}
             {error && <span className={`${classInput}__error-message`}>{error}</span>}
         </>

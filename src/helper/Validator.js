@@ -1,35 +1,29 @@
+export const validation = (values) => {
+    const errors = {};
 
-import { VALIDATION_TYPE } from '../../data/constants';
-
-export const validate = (value, validators) => {
-    // If validators is not an array, return false by default
-    if (!Array.isArray(validators)) {
-        return false;
+    // if (values.username && values.username.toString().trim() === '') {
+    if (values.username === '') {
+        errors.username = 'Username is required';
     }
 
-    let isValid = true;
+    if (!values.email) {
+        errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(values.email.toString())) {
+        errors.email = 'Email is invalid';
+    }
 
-    for (const validator of validators) {
-        switch (validator) {
-            case VALIDATION_TYPE.REQUIRE:
-                isValid = isValid && value.toString().trim().length > 0;
-                break;
-            case VALIDATION_TYPE.EMAIL:
-                isValid = isValid && /^\S+@\S+\.\S+$/.test(value.toString());
-                break;
-            case VALIDATION_TYPE.PASSWORD:
-                isValid =
-                    isValid &&
-                    /[a-zA-Z]/.test(value) && // contains at least one letter
-                    /[0-9]{1,2}/.test(value) && // contains a number from 0 to 99
-                    value.length >= 8; // has a minimum length of 8 characters
-                break;
-            case VALIDATION_TYPE.SELECTED:
-                isValid = isValid && value !== '';
-                break;
-            default:
-                break;
+    if (!values.password) {
+        errors.password = 'Password is required';
+    } else {
+        const password = values.password.toString();
+        const hasLetter = /[a-zA-Z]/.test(password);
+        const hasNumber = /[0-9]{1,2}/.test(password);
+        const isLengthValid = password.length >= 8;
+
+        if (!hasLetter || !hasNumber || !isLengthValid) {
+            errors.password = 'Please enter a valid password: at least 8 characters, including at least one letter and one number from 0 to 99';
         }
     }
-    return isValid;
-};
+
+    return errors;
+}

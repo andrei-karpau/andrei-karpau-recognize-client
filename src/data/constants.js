@@ -28,10 +28,3 @@ export const AUTH_HEADING = {
         SIGN_UP: 'Welcome to Recognize',
     }
 };
-
-export const VALIDATION_TYPE  = {
-    REQUIRE: 'require',
-    EMAIL: 'email',
-    PASSWORD: 'password',
-    SELECTED:'selected'
-}
