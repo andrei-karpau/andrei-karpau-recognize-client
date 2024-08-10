@@ -9,7 +9,8 @@ export const AuthProvider = ({ children }) => {
         authMode: AUTH_MODES.LOG_IN, // login, signup, null
         isAuth: false,
         userName: null,
-        userId: null
+        userId: null,
+        email: null
       });
     return (
         <AuthContext.Provider value={{authState, setAuthState}}>

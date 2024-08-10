@@ -26,4 +26,4 @@ export const validation = (values) => {
     }
 
     return errors;
-}
+};

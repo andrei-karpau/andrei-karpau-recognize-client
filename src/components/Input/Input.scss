@@ -1,0 +1,46 @@
+@use '../../styles/partials/typography' as *;
+@use '../../styles/partials/mixins' as *;
+@use '../../styles/partials/variables' as *;
+
+.input__container {
+    width: 50%;
+    max-width: 400px;
+    @include flex(center, center, column, nowrap);
+    margin-bottom: 1rem;
+    position: relative;
+
+    @include tablet {
+        width: 100%;
+        max-width: auto;
+    }
+}
+
+.label {
+    width: 100%;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.input {
+    width: 100%;
+    font-family: inherit;
+    @include font-stack(null, .875, 400, 1rem, $font-main-color);
+    height: auto;
+    border-radius: 5px;
+    padding: .7rem .75rem;
+    border: 1px solid $border-input;
+    background: $bg-input;
+
+    &[type="password"] {
+        padding-right: 2rem;
+    }
+}
+
+.error-message {
+    @include font-stack(null, .5rem, 400, .7rem, $error);
+    width: 100%;
+    margin-top: 0.25rem;
+}
+
+
+

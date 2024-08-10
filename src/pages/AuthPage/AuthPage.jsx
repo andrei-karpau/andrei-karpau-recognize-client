@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { MdOutlineWavingHand } from "react-icons/md";
 import { AuthContext } from '../../helper/AuthContext';
@@ -10,81 +11,79 @@ import './AuthPage.scss';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 
-
 const AuthPage = () => {
     const { authState, setAuthState } = useContext(AuthContext);
     const { authMode } = authState;
+    const navigate = useNavigate();
 
     const [errors, setErrors] = useState({});
-    const [errorMessage, setErrorMessage] = useState({});
     const [isValid, setIsValid] = useState(false);
+    const [formTouched, setFormTouched] = useState(false);
     const [formData, setFormData] = useState({ username: '', email: '',password: ''});
 
+    const validationInputs  = (values, mode) => {
+        const allErros = validation(values);
+        let validationErrors;
+
+        if (mode === AUTH_MODES.LOG_IN) {
+            const { username, ...filtredErrors} = allErros;
+            validationErrors = { ...filtredErrors};
+        } else if (mode === AUTH_MODES.SIGN_UP) {
+            validationErrors = {...allErros};
+        }
+
+        setErrors(validationErrors);
+
+        setIsValid(prevIsValid => {
+            const hasErrors = Object.keys(validationErrors).length > 0;
+            return !hasErrors;
+        });
+    };
 
     const handleOnChange = (e) => {
         const { id, value } = e.target;
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          [id]: value,
-        }));
+        setFormData((prevFormData) => ({...prevFormData, [id]: value}));
+        setFormTouched(true);
     };
 
     const handleBlur = () => {
-        // console.log(formData)
-        // const validationErrors = validation(formData);
-        // setErrors(validationErrors);
-        // console.log(errors);
-        // setIsValid(Object.keys(validationErrors).length === 0);
-        if (authMode === AUTH_MODES.LOG_IN) {
-            const { username, ...validationErrors } = validation(formData);
-            setErrors(validationErrors);
-            console.log(validationErrors)
-            setIsValid(Object.keys(validationErrors).length === 0);
-            console.log(isValid);
-        } else if (authMode === AUTH_MODES.SIGN_UP) {
-            const validationErrors = validation(formData);
-            setErrors(validationErrors);
-            setIsValid(Object.keys(validationErrors).length === 0);
-        }
+        validationInputs(formData, authMode);
     };
 
-    const loginHandler = async (email, password) => {
-        console.log(email, password)
-        try {
-            const response = await login(email, password);
-            console.log(response)
-        } catch (error) {
-            console.log(error);
-            setErrorMessage(error.response.data.message);
-        }
-    }
-
-    const signupHandler = async (username, email, password) => {
-        try {
-            const response = await signup({ username, email, password });
-            console.log(response.data)
-        } catch (error) {
-            console.log(error);
-            setErrorMessage(error.response.data.message);
-        }
-    }
-
     const authSubmitHandler = async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
+        validationInputs(formData, authMode);
 
-        const validationErrors = validation(formData);
-        setErrors(validationErrors);
+        if (!isValid) return;
 
-        if (Object.keys(validationErrors).length === 0) {
+        try {
+            let response;
             if (authMode === AUTH_MODES.LOG_IN) {
-
-                loginHandler (formData.email, formData.password);
-
-            } else if (authMode === AUTH_MODES.SIGN_UP) {
-                signupHandler(formData.username, formData.email, formData.password);
+                response = await login(formData.email, formData.password);
+            } else {
+                response =  await signup(formData.username, formData.email, formData.password);
             }
+            const { userName, userId, email } = response.data;
+
+            setAuthState((prevAuthState) => ({...prevAuthState, 
+                authMode: null,
+                isAuth: !prevAuthState.isAuth,
+                userName,
+                userId,
+                email
+            }));
+            setFormData((prevFormData) => ({...prevFormData, username: '', email: '', password:''}));
+            navigate('/recognize');
+        } catch (error) {
+            console.error('Authentication error:', error);
         }
     }
+
+    useEffect(() => {
+        if (formTouched) {
+            validationInputs(formData, authMode);
+        }
+    }, [authMode, formTouched, formData]);
 
     return (
         <section className='authpage'>
@@ -93,7 +92,7 @@ const AuthPage = () => {
                 <MdOutlineWavingHand className='authpage__icon' title='waving hand' size='1.5rem'/>
                 <p className='authpage__subheading'>{authMode === AUTH_MODES.SIGN_UP ? AUTH_HEADING.SUB.SIGN_UP : AUTH_HEADING.SUB.LOG_IN }</p>
             </div>
-            <form>
+            <form className='authpage__form'>
                 {authMode === AUTH_MODES.SIGN_UP && 
                 <Input 
                     id='username' 
@@ -125,7 +124,7 @@ const AuthPage = () => {
                     onBlur={handleBlur}
                     error={errors.password}
                 />
-                <Button type='submit' handleOnClick={authSubmitHandler} disabled={!isValid}>Submit</Button>
+                <Button type='submit' handleOnClick={authSubmitHandler} disabled={!isValid} className='secondary'>Submit</Button>
             </form>
         </section>
     );

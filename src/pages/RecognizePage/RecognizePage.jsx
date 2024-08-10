@@ -1,8 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
+
+import { AuthContext } from '../../helper/AuthContext';
 
 import './RecognizePage.scss'
 
 const RecognizePage = () => {
+    const { authState, setAuthState } = useContext(AuthContext);
+
+    console.log(authState)
+
     return (
         <section className='recognize'>
             <h1> Recognize Page is comming soon</h1>

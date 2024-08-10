@@ -1,3 +1,49 @@
 @use '../../styles/partials/typography' as *;
 @use '../../styles/partials/mixins' as *;
 @use '../../styles/partials/variables' as *;
+
+
+.button {
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: .5rem 1rem;
+    @include font-stack(null, .76rem, 400, 1.5rem, null);
+
+    &__primary {
+        color: $primary-btn;
+        background-color: bg-primary-btn;
+        border-color: bg-primary-btn;
+        text-align: center;
+        vertical-align: middle;
+
+        &:hover {
+            color: $primary-btn;
+            background-color: $bg-hover-primary-btn;
+            border-color: $bg-hover-primary-btn;
+        }
+    }
+
+    &__secondary {
+        background-color: $bg-secondary-btn;
+        border-color: $bg-secondary-btn;
+        color: $bg-input;
+        
+        &:hover {
+            color: $bg-input;
+            background-color: $bg-hover-secondary-btn;
+            border-color: $bg-hover-secondary-btn;
+        }
+    }
+
+    &__icon {
+        position: absolute;
+        right: 10px;
+        top: 35px;
+        background-color: $bg-input;
+        padding: 0;
+    }
+}

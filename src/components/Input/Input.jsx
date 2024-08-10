@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 
+import './Input.scss'
 import Button from '../Button/Button';
 
 const Input = ({id, type = 'text', label, placeholder, value,  classInput = '', onChange, onBlur, error, ...props}) => {
@@ -13,8 +14,8 @@ const Input = ({id, type = 'text', label, placeholder, value,  classInput = '', 
     };
     
     return (
-        <>
-            {label && <label htmlFor={id} className={`${classInput}__label`}>{label}</label> }
+        <div className='input__container'>
+            {label && <label htmlFor={id} className={`label label__${classInput}`}>{label}</label> }
             <input
                 id={id}
                 type={type === 'password' && isPasswordVisible ? 'text' : type}
@@ -22,16 +23,16 @@ const Input = ({id, type = 'text', label, placeholder, value,  classInput = '', 
                 value={value}
                 onChange={onChange}
                 onBlur = {onBlur}
-                className = {`${classInput}__input`}
+                className = {`input input__${classInput}`}
                 autoComplete = 'off'
             />
             {type === 'password' && (
-                <Button handleOnClick={togglePasswordVisibility}>
+                <Button handleOnClick={togglePasswordVisibility} className='icon'>
                     {isPasswordVisible ? < MdOutlineVisibility/> : < MdOutlineVisibilityOff/>}
                 </Button>
             )}
-            {error && <span className={`${classInput}__error-message`}>{error}</span>}
-        </>
+            {error && <span className={`error-message error-message__${classInput}`}>{error}</span>}
+        </div>
     );
 };
 

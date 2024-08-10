@@ -1,8 +1,10 @@
 import React from 'react';
 
-const Button = ({ children, handleOnClick, type='button', disabled }) => {
+import './Button.scss';
+
+const Button = ({ children, handleOnClick, type='button', disabled, className }) => {
     return (
-        <button type={type} onClick = {handleOnClick} disabled={disabled}>
+        <button type={type} onClick = {handleOnClick} disabled={disabled} className={`button button__${className}`}>
             {children}
         </button>
     );

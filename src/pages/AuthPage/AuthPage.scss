@@ -4,5 +4,35 @@
 
 
 .authpage {
+    padding: 1rem;
+    @include flex(space-between, center, column, nowrap);
 
+    &__heading {
+        text-align: center;
+        width: 100%;
+        padding: 1.5rem 0;
+        @include font-stack(null, 1.625rem,600, null, $font-headng-auth);
+    }
+
+    &__subheading-wrapper {
+        width: 100%;
+        @include flex(center, center, row, nowrap);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+   &__subheading {
+        @include font-stack(null, 1rem, 500, 1.25rem, $font-subheading-auth);
+        letter-spacing: 0;
+   }
+
+   &__form {
+        width: 100%;
+        @include flex(center, center, column, nowrap);
+   }
+
+   .button__secondary {
+    max-width: 400px;
+    width: 100%;
+   }
 }
