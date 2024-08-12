@@ -25,6 +25,7 @@ const Input = ({id, type = 'text', label, placeholder, value,  classInput = '', 
                 onBlur = {onBlur}
                 className = {`input input__${classInput}`}
                 autoComplete = 'off'
+                {...props}
             />
             {type === 'password' && (
                 <Button handleOnClick={togglePasswordVisibility} className='icon'>

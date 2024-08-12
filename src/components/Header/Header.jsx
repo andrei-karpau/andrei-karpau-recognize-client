@@ -42,7 +42,7 @@ const Header = () => {
         }
     };
 
-    const textCaption = isAuth ? userName : (authMode === AUTH_MODES.LOG_IN ? AUTH_TEXT_CAPTION.SIGN_UP : AUTH_TEXT_CAPTION.LOG_IN);
+    const textCaption = isAuth ? `Welcome, ${userName}`: (authMode === AUTH_MODES.LOG_IN ? AUTH_TEXT_CAPTION.SIGN_UP : AUTH_TEXT_CAPTION.LOG_IN);
     const btnCaption = isAuth ? AUTH_BTN_CAPTION.LOG_OUT : (authMode === AUTH_MODES.LOG_IN ? AUTH_BTN_CAPTION.SIGN_UP : AUTH_BTN_CAPTION.LOG_IN);
 
     return (

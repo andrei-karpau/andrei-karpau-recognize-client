@@ -1,7 +1,6 @@
 export const validation = (values) => {
     const errors = {};
 
-    // if (values.username && values.username.toString().trim() === '') {
     if (values.username === '') {
         errors.username = 'Username is required';
     }
@@ -23,6 +22,20 @@ export const validation = (values) => {
         if (!hasLetter || !hasNumber || !isLengthValid) {
             errors.password = 'Please enter a valid password: at least 8 characters, including at least one letter and one number from 0 to 99';
         }
+    }
+
+    return errors;
+};
+
+export const validationRecognize = (values) => {
+    const errors = {};
+
+    if (!values.file) {
+        errors.file = 'File is required';
+    }
+
+    if (!values.query.trim()) {
+        errors.query = 'Prompt is required';
     }
 
     return errors;

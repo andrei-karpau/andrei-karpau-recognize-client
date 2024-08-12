@@ -22,4 +22,8 @@
         @include flex(space-between, center, row, nowrap);
         gap: 1rem;
     }
+
+    &__text-caption{
+        text-transform: capitalize;
+    }
 }

@@ -28,3 +28,11 @@ export const AUTH_HEADING = {
         SIGN_UP: 'Welcome to Recognize',
     }
 };
+
+export const EDAN_PARAMETRS = {
+    providers: {
+        amazon: 'amazon',
+        extracta: 'extracta'
+    },
+    pages: '1-*'
+}
