@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../helper/AuthContext';
 import { validationRecognize } from '../../helper/validator';
 import { EDAN_PARAMETRS } from '../../data/constants';
-import { edenRequest, createNewQuery, getQueriesList } from '../../helper/api';
+import { edenRequest, createNewQuery, getQueriesList, deleteQueryById } from '../../helper/api';
 
 import './RecognizePage.scss';
 import Input from '../../components/Input/Input';
@@ -81,8 +81,6 @@ const RecognizePage = () => {
             if(edenResponse && !edenResponse.error) {
                 const { public_id, status, error } = edenResponse.data;
 
-                console.log(edenResponse)
-
                 const newQueries = await createNewQuery({
                     title: formData.query,
                     userId: userId,
@@ -91,8 +89,6 @@ const RecognizePage = () => {
                     status,
                     fileName: formData.file.name
                 });
-
-                console.log(newQueries)
 
                 resetsInputs();
                 setLoadedQueries(newQueries.data.queries);
@@ -118,8 +114,21 @@ const RecognizePage = () => {
         setLoadedQueries([]);
     };
 
+    const handleResultQuery = (qid) => {
 
+    }
 
+    const handleDeleteQuery = async (qid) => {
+        const prevQueries = [...loadedQueries];
+        const updatedQueries = prevQueries.filter(query => query.id !== qid);
+        try {
+            const deletedQuery = await deleteQueryById(qid, userId);
+            setLoadedQueries(updatedQueries);
+        } catch(err) {
+            setLoadedQueries(prevQueries);
+            console.error(`Failed to delete query with ID ${qid}: ${err.message}`);
+        }
+    };
 
     return (
         <section className='recognize'>
@@ -169,7 +178,11 @@ const RecognizePage = () => {
                         onStatusChange={handleStatusChange} 
                         onDeleteAll={handleDeleteAll}
                     />
-                    <QueriesList filtredQueries={loadedQueries}/>
+                    <QueriesList 
+                        filtredQueries={loadedQueries} 
+                        onResult={handleResultQuery} 
+                        onDelete={handleDeleteQuery}
+                    />
                 </>
                 }
             </div>

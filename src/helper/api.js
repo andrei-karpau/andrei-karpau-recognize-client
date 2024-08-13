@@ -13,3 +13,5 @@ export const edenRequest = (data) => axios.post(EDEN_URL, data, { headers: {Auth
 export const createNewQuery = (opts) => axios.post(`${API_URL}/queries/new`,opts);
 
 export const getQueriesList = (uid) => axios.get(`${API_URL}/queries/${uid}`);
+
+export const deleteQueryById = (qid, uid) => axios.delete(`${API_URL}/queries/${qid}`, {data: {uid}});

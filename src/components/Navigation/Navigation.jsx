@@ -44,7 +44,7 @@ const Navigation = ({ onSearch, onStatusChange, onDeleteAll}) => {
                     <option value='failed'>Failed</option>
                 </select>
             </div>
-            <Button type='button' onClick={handleDeleteAll} className='delete'>Delete All Queries</Button>
+            <Button type='button'  handleOnClick={handleDeleteAll} className='delete'>Delete All Queries</Button>
         </nav>
     );
 };

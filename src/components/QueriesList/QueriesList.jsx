@@ -4,7 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 
 import Button from '../Button/Button';
 
-const QueriesList = ({filtredQueries, onClick, onDelete}) => {
+const QueriesList = ({filtredQueries, onResult,  onDelete}) => {
     console.log('filtredQueries', filtredQueries)
 
     return (
@@ -22,10 +22,8 @@ const QueriesList = ({filtredQueries, onClick, onDelete}) => {
                     <td className='recognize__column'>{`${query.title} in ${query.fileName}`}</td>
                     <td className='recognize__column'>{query.status}</td>
                     <td className='recognize__column btn'>
-                        <Button className='primary'>Result</Button>
-                        <Button className='icon'>
-                            <RxCross2 />
-                        </Button>
+                        <Button className='primary' handleOnClick={() => onResult(query.public_id)}>Result</Button>
+                        <Button className='delete' handleOnClick={() => onDelete(query.id)}>Delete</Button>
                     </td>
                 </tr>
                 ))}
