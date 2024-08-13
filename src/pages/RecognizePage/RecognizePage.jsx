@@ -106,13 +106,10 @@ const RecognizePage = () => {
     };
 
     const handleSearch = (term) => {
-        console.log(term)
         setSearchTerm(term);
-
     };
 
     const handleStatusChange = (status) => {
-        console.log(status)
         setStatusFilter(status);
     };
 
@@ -123,7 +120,6 @@ const RecognizePage = () => {
     const handleResultQuery = async (qid, bid) => {
         try {
             const edenResultResponse = await edenResults(qid);
-            console.log(edenResultResponse)
 
             if(edenResultResponse && !edenResultResponse.error) {
                 if(bid === BTN_ACTION.UPDATE) {
@@ -132,8 +128,7 @@ const RecognizePage = () => {
                     getLoadedQueriesList();
                 } else {
                     setDetected(edenResultResponse.data.results);
-                    setIsOpenModal(prevIsModal => !prevIsModal)
-                    console.log("Open modal")
+                    setIsOpenModal(prevIsModal => !prevIsModal);
                 }
             } else {
                 console.error('Error in Eden response:', edenResultResponse.data.error);
@@ -156,8 +151,8 @@ const RecognizePage = () => {
     };
 
     const closeModalHandle = () => {
-        setIsOpenModal(prevIsModal => !prevIsModal)
-    }
+        setIsOpenModal(prevIsModal => !prevIsModal);
+    };
 
     return (
         <section className='recognize'>
@@ -166,7 +161,7 @@ const RecognizePage = () => {
                 <Input 
                     id='file' 
                     type='file' 
-                    accept='.pdf, .docx, .txt'
+                    accept='.pdf, .jpg, .png'
                     label='Please upload your file' 
                     classInput = 'recognize' 
                     onChange={handleOnChange}
@@ -202,11 +197,11 @@ const RecognizePage = () => {
                 </div>)}
                 {loadedQueries.length !== 0 && 
                 <>
-                    <Navigation 
+                    {/* <Navigation 
                         onSearch={handleSearch} 
                         onStatusChange={handleStatusChange} 
                         onDeleteAll={handleDeleteAll}
-                    />
+                    /> */}
                     <QueriesList 
                         filtredQueries={loadedQueries} 
                         onResult={handleResultQuery} 

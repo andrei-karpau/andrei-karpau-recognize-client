@@ -7,8 +7,6 @@ import Button from '../Button/Button';
 import Modal from '../../components/Modal/Modal';
 
 const QueriesList = ({filtredQueries, onResult,  onDelete, detected, isOpen, onClose}) => {
-    console.log('filtredQueries', filtredQueries);
-    console.log(detected);
 
     let contentModal;
 
@@ -28,8 +26,8 @@ const QueriesList = ({filtredQueries, onResult,  onDelete, detected, isOpen, onC
                                 </tr>
                             </thead>
                             <tbody>
-                                {detected.amazon.items.map((result) => (
-                                    <tr className='recognize__row'>
+                                {detected.amazon.items.map((result, i) => (
+                                    <tr className='recognize__row' key={i}>
                                         <td className='recognize__column name'>{result.page}</td>
                                         <td className='recognize__column name'>{result.query}</td>
                                         <td className='recognize__column name'>{result.value}</td>
@@ -51,8 +49,8 @@ const QueriesList = ({filtredQueries, onResult,  onDelete, detected, isOpen, onC
                                 </tr>
                             </thead>
                             <tbody>
-                                {detected.extracta.items.map((result) => (
-                                    <tr className='recognize__row'>
+                                {detected.extracta.items.map((result, i) => (
+                                    <tr className='recognize__row' key={i}>
                                         <td className='recognize__column name'>{result.page}</td>
                                         <td className='recognize__column name'>{result.query}</td>
                                         <td className='recognize__column name'>{result.value}</td>
