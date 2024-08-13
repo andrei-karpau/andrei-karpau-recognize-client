@@ -25,21 +25,18 @@ const RecognizePage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
 
+    const getLoadedQueriesList = async () => {
+        try {
+            const response = await getQueriesList(userId);
+            setLoadedQueries(response.data.queries);
+        } catch (err) {
+            console.log(`Failed to load queries list: ${err}`);
+        }
+    };
+
     useEffect(() => {
-        const getLoadedQueriesList = async () => {
-            try {
-                const response = await getQueriesList(userId);
-                console.log(response)
-                setLoadedQueries(response.data.queries);
-            } catch (err) {
-                console.log(`Failed to load queries list: ${err}`);
-            }
-        };
-
         getLoadedQueriesList();
-    }, [userId]);
-
-    console.log(loadedQueries)
+    }, []);
 
     const validationInput = (values) => {
         const errors = validationRecognize(values);
@@ -101,7 +98,7 @@ const RecognizePage = () => {
         } catch (err) {
             console.log(err);
         }
-    }
+    };
 
     const handleSearch = (term) => {
         console.log(term)
