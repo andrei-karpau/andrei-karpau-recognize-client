@@ -1,0 +1,172 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+@use '../../styles/partials/typography' as *;
+@use '../../styles/partials/mixins' as *;
+@use '../../styles/partials/variables' as *;
+
+.modal {
+    position: fixed;
+    z-index: 4;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.02);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @each $size in map.keys($columns) {
+      @include media-query_($size) {
+        $margin: map.get($default-margin, $size);
+        $gutter: map.get($default-gutter, $size);
+        @include layout-grid($size, $margin, $max-width);
+        @if $size == desktop {
+          
+        }
+        @if $size == tablet {
+            
+        }
+        @if $size == mobile {
+          padding: 0;
+        }
+      }
+    }
+
+    &-grid{
+      z-index: 99;
+      @each $size in map.keys($columns) {
+        @include media-query_($size) {
+            width: map.get($default-content-width, $size);
+            $margin: map.get($default-margin, $size);
+            $gutter: map.get($default-gutter, $size);
+            @if $size == mobile {
+                width: 100%;
+                @include inner($size, 0, 0);
+            } @else if $size == tablet {
+                width: 100%;
+                @include inner($size, $margin, $gutter);
+            } @else if $size == desktop {
+                @include inner($size, $margin, $gutter);
+            }
+        }
+      }
+
+      &__content {
+        position: relative;
+        background: white;
+        border-radius: rem(5);
+        display: flex;
+        flex-direction: column;
+        padding: rem(48) rem(64);
+        justify-content: space-between;
+        @each $size in map.keys($columns) {
+          @include media-query_($size) {
+            @if $size == desktop {
+              grid-column-end: span 8;
+              grid-column-start: 3;
+              row-gap: rem(24);
+            }
+            @if $size == tablet {
+              grid-column-end: span 12;
+              grid-column-start: 1;
+              row-gap: rem(24);
+            }
+            @if $size == mobile {
+              grid-column-end: span 6;
+              width: map.get($default-content-width, 'mobile');
+              $margin: map.get($default-margin, 'mobile');
+              $gutter: map.get($default-gutter, 'mobile');
+              @include inner('mobile', $margin, $gutter);
+              border-radius: unset;
+              min-height: calc(100vh - rem(16));
+              padding: rem(16)
+            }
+          }
+        }
+
+        &-wrapper {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          row-gap: rem(16);
+          @include media-query_('mobile') {
+            grid-column-end: span 6;
+          }
+        }
+
+        &-close {
+          width: rem(24);
+          height: rem(24);
+          align-self: flex-end;
+          position: absolute;
+          right: rem(-52);
+          top: rem(-32);
+          @include media-query_('mobile') {
+            position: relative;
+            right: rem(0);
+            top: rem(0);
+          }
+        }
+
+        &-header {
+          @include font-stack(null, 1.625rem,600, null, $font-headng-auth);
+          @include media-query_('mobile') {
+            @include font-stack(null, 1.625rem,600, null, $font-headng-auth);
+            padding-bottom: rem(16);
+          }
+        }
+
+        &-text {
+          @include font-stack(null, 1.625rem,600, null, $font-headng-auth);
+          @include media-query_('mobile') {
+            @include font-stack(null, 1.625rem,600, null, $font-headng-auth);
+          }
+        }
+      }
+
+      &__button {
+        display: flex;
+        justify-content: flex-end;
+        column-gap: rem(16);
+        
+        @include media-query_('mobile') {
+          justify-content: center;
+          grid-column-end: span 6;
+        }
+
+        &-cancel {
+          width: rem(72);
+          height: rem(38);
+          border-radius: rem(20);
+          border: rem(1) solid $Cloud;
+          background-color: $White;
+          color: $Cloud;
+          @include media-query_('mobile') {
+            flex-grow: 1;
+          }
+
+          &:hover{
+            border: rem(1) solid $bg-secondary-btn;
+            color: $bg-secondary-btn;
+          }
+        }
+
+        &-delete {
+          width: rem(72);
+          height: rem(38);
+          border-radius: rem(20);
+          border: none;
+          background-color: $Red;
+          color: $White;
+          @include media-query_('mobile') {
+            flex-grow: 1;
+          }
+
+          &:hover{
+            background-color: $Graphite;
+          }
+        }
+      }
+    }
+  }

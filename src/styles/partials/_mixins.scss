@@ -1,6 +1,7 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
 @use '../partials/variables' as *;
-
-
 
 @mixin tablet {
   @media screen and (max-width: $tablet-breakpoint) {
@@ -25,4 +26,73 @@
   align-items: $align-items;
   flex-direction: $flex-direction;
   flex-wrap: $flex-wrap;
+}
+
+//grid
+@function rem($a:0, $b:0, $c:0){
+  @return math.div($a+$b+$c, 16) + rem;
+}
+// returns the lower grid boundary or null if the smallest grid is selected
+@function breakpoint-min($size) {
+  $min: map.get($breakpoints, $size);
+
+  @return if($min > 0, $min, null);
+}
+  
+// returns the upper grid boundary or null if the largest grid is selected
+@function breakpoint-max($size) {
+  $names: map.keys($columns);
+  $n: list.index($names, $size);
+  $prev: if($n > 1, list.nth($names, $n - 1), null);
+
+  @return if($prev, (breakpoint-min($prev) - 1px), null);
+}
+
+@mixin media-query_($size) {
+  $min: breakpoint-min($size);
+  $max: breakpoint-max($size);
+
+  @if $min == null and $max != null {
+    // Mobile
+      @media (max-width: $max) {
+          @content;
+      }
+  } @else if $min != null and $max != null {
+    // Tablet
+      @media (min-width: $min) and (max-width: $max) {
+          @content;
+      }
+  } @else if $min != null and $max == null {
+    // Desktop
+      @media (min-width: $min) {
+          @content;
+      }
+  }
+}
+
+@mixin layout-grid($size, $margin, $max-width: null) {
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: $margin;
+
+  @if $max-width {
+      max-width: $max-width;
+  }
+}
+
+@mixin inner($size, $margin, $gutter, $gutter-show: $gutter) {
+  display: flex;
+  flex-flow: row wrap;
+  margin: math.div(-$gutter, 2);
+
+  @supports (display: grid) {
+      display: grid;
+      margin: 0;
+      column-gap: $gutter;
+      row-gap: $gutter-show;
+      grid-template-columns: repeat(
+          map.get($columns, $size),
+          minmax(0, 1fr)
+      );
+  }
 }

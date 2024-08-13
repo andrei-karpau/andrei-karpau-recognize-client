@@ -21,6 +21,7 @@ const RecognizePage = () => {
     const [isValid, setIsValid] = useState(false);
     const [formData, setFormData] = useState({ file: '', query: '' });
     const [inputKey, setInputKey] = useState();
+    const [detected, setDetected] = useState([]);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
@@ -116,7 +117,7 @@ const RecognizePage = () => {
 
     const handleResultQuery = async (qid) => {
         const edenResultResponse = await edenResults(qid);
-        console.log(edenResultResponse);
+        setDetected(edenResultResponse.data.results);
         const status = edenResultResponse.data.status
         const updateStatus = await updateQuerieStatus(qid, status);
         getLoadedQueriesList();
@@ -188,6 +189,7 @@ const RecognizePage = () => {
                         filtredQueries={loadedQueries} 
                         onResult={handleResultQuery} 
                         onDelete={handleDeleteQuery}
+                        detected={detected}
                     />
                 </>
                 }

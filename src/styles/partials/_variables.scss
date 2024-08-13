@@ -1,3 +1,7 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+
 // screen size
 $desktop-breakpoint: 90rem; // 1440px
 $tablet-breakpoint: 48rem; // 768px
@@ -20,8 +24,53 @@ $bg-success: #e6f7ef;
 $font-success: #45946d;
 $bg-delete-btn: #faedee;
 
+//grid
+$Cloud: #BDC5D5;
+$Red: #C94515;
+$White: #FFFFFF;
+$Graphite: #232940;
 
+$breakpoints: (
+    desktop: 1280px,
+    tablet: 768px,
+    mobile: 0px,
+) !default;
 
+$default-margin: (
+    desktop: auto,
+    tablet: 0 36px,
+    mobile: 0 16px,
+) !default;
+
+$default-gutter: (
+    desktop: 24px,
+    tablet: 24px,
+    mobile: 16px,
+) !default;
+
+$default-content-width: (
+    desktop: calc(63*12 + 24*11) + px,
+    tablet: auto,
+    mobile: auto,
+) !default;
+
+$column-width: (
+    desktop: 63px,
+    tablet: auto,
+    mobile: auto,
+) !default;
+
+$columns: (
+    desktop: 12,
+    tablet: 12,
+    mobile: 6,
+) !default;
+
+$mobile: (
+    mobile: true,
+) !default;
+
+$max-width: null !default;
 
 
 
