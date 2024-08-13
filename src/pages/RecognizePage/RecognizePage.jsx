@@ -2,8 +2,9 @@ import React, { useContext, useState, useEffect } from 'react';
 
 import { AuthContext } from '../../helper/AuthContext';
 import { validationRecognize } from '../../helper/validator';
-import { EDAN_PARAMETRS } from '../../data/constants';
+import { EDAN_PARAMETRS, BTN_ACTION } from '../../data/constants';
 import { edenRequest, edenResults, createNewQuery, getQueriesList, deleteQueryById, updateQuerieStatus } from '../../helper/api';
+import { sortQueriesByStatus } from '../../helper/utils'
 
 import './RecognizePage.scss';
 import Input from '../../components/Input/Input';
@@ -28,7 +29,8 @@ const RecognizePage = () => {
     const getLoadedQueriesList = async () => {
         try {
             const response = await getQueriesList(userId);
-            setLoadedQueries(response.data.queries);
+            const sortedQueries = sortQueriesByStatus(response.data.queries);
+            setLoadedQueries(sortedQueries);
         } catch (err) {
             console.log(`Failed to load queries list: ${err}`);
         }
@@ -91,9 +93,10 @@ const RecognizePage = () => {
                 });
 
                 resetsInputs();
-                setLoadedQueries(newQueries.data.queries);
+                const sortedQueries = sortQueriesByStatus(newQueries.data.queries);
+                setLoadedQueries(sortedQueries);
             } else {
-                console.error('Error in Eden response:', edenResponse.error);
+                console.error('Error in Eden response:', edenResponse.data.error);
             }
         } catch (err) {
             console.log(err);
@@ -103,6 +106,7 @@ const RecognizePage = () => {
     const handleSearch = (term) => {
         console.log(term)
         setSearchTerm(term);
+
     };
 
     const handleStatusChange = (status) => {
@@ -114,13 +118,26 @@ const RecognizePage = () => {
         setLoadedQueries([]);
     };
 
-    const handleResultQuery = async (qid) => {
-        const edenResultResponse = await edenResults(qid);
-        console.log(edenResultResponse);
-        const status = edenResultResponse.data.status
-        const updateStatus = await updateQuerieStatus(qid, status);
-        getLoadedQueriesList();
-    }
+    const handleResultQuery = async (qid, bid) => {
+        try {
+            const edenResultResponse = await edenResults(qid);
+            console.log(edenResultResponse)
+
+            if(edenResultResponse && !edenResultResponse.error) {
+                if(bid === BTN_ACTION.UPDATE) {
+                    const status = edenResultResponse.data.status;
+                    const updateStatus = await updateQuerieStatus(qid, status);
+                    getLoadedQueriesList();
+                } else {
+                    console.log("Open modal")
+                }
+            } else {
+                console.error('Error in Eden response:', edenResultResponse.data.error);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     const handleDeleteQuery = async (qid) => {
         const prevQueries = [...loadedQueries];
@@ -133,8 +150,6 @@ const RecognizePage = () => {
             console.error(`Failed to delete query with ID ${qid}: ${err.message}`);
         }
     };
-
-
 
     return (
         <section className='recognize'>
