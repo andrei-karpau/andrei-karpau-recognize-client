@@ -15,8 +15,8 @@
 
     &__primary {
         color: $primary-btn;
-        background-color: bg-primary-btn;
-        border-color: bg-primary-btn;
+        background-color: $bg-primary-btn;
+        border-color: $bg-primary-btn;
         text-align: center;
         vertical-align: middle;
 
@@ -46,8 +46,8 @@
     }
 
     &__delete {
-        color: #d15f5f !important;
-        background-color: #faedee;
+        color: #d15f5f;
+        background-color: $bg-delete-btn;
     }
 
     &__icon {

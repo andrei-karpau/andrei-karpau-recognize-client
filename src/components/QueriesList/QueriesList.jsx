@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { RxCross2 } from "react-icons/rx";
-
+import './QueriesList.scss';
 import Button from '../Button/Button';
 
 const QueriesList = ({filtredQueries, onResult,  onDelete}) => {
@@ -19,8 +18,8 @@ const QueriesList = ({filtredQueries, onResult,  onDelete}) => {
             <tbody>
                 {filtredQueries.map((query) => (
                 <tr className='recognize__row' key={query.id}>
-                    <td className='recognize__column'>{`${query.title} in ${query.fileName}`}</td>
-                    <td className='recognize__column'>{query.status}</td>
+                    <td className='recognize__column name'>{`${query.title} in ${query.fileName}`}</td>
+                    <td className={`recognize__column status ${query.status}`}><span className='recognize__tag'>{query.status}</span></td>
                     <td className='recognize__column btn'>
                         <Button className='primary' handleOnClick={() => onResult(query.public_id)}>Result</Button>
                         <Button className='delete' handleOnClick={() => onDelete(query.id)}>Delete</Button>
