@@ -79,7 +79,9 @@ const RecognizePage = () => {
             const edenResponse = await edenRequest(form);
 
             if(edenResponse && !edenResponse.error) {
-                const { public_id, status, error } = edenResponse;
+                const { public_id, status, error } = edenResponse.data;
+
+                console.log(edenResponse)
 
                 const newQueries = await createNewQuery({
                     title: formData.query,
@@ -90,8 +92,10 @@ const RecognizePage = () => {
                     fileName: formData.file.name
                 });
 
+                console.log(newQueries)
+
                 resetsInputs();
-                setLoadedQueries(newQueries.queries);
+                setLoadedQueries(newQueries.data.queries);
             } else {
                 console.error('Error in Eden response:', edenResponse.error);
             }
