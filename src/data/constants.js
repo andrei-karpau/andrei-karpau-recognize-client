@@ -12,6 +12,8 @@ export const AUTH_BTN_CAPTION = {
     LOG_IN: 'Log In',
     SIGN_UP: 'Sign Up',
     LOG_OUT: 'Log Out',
+    DELETE: 'Delete',
+    RESULT: 'Result'
 };
 
 export const LOGO_NAME = {
@@ -35,4 +37,25 @@ export const EDAN_PARAMETRS = {
         extracta: 'extracta'
     },
     pages: '1-*'
+};
+
+export const TABLE_LABEL = {
+    NAME: 'Name',
+    STATUS: 'Status'
+};
+
+export const TABLE_BTN_LABEL = {
+    DELETE: 'Delete',
+    RESULT: 'Result',
+    UPDATE: 'Update'
+};
+
+export const QUERY_STATUS = {
+    PROCESSING: 'processing',
+    FINISHED: 'finished'
+}
+
+export const BTN_ACTION = {
+    UPDATE: 'update',
+    RESULT: 'result'
 }

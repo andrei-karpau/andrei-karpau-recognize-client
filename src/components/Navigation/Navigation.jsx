@@ -41,7 +41,6 @@ const Navigation = ({ onSearch, onStatusChange, onDeleteAll}) => {
                     <option value=''>All</option>
                     <option value='finished'>Finished</option>
                     <option value='processing'>Processing</option>
-                    <option value='failed'>Failed</option>
                 </select>
             </div>
             <Button type='button'  handleOnClick={handleDeleteAll} className='delete'>Delete All Queries</Button>
