@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../helper/AuthContext';
 import { validationRecognize } from '../../helper/validator';
 import { EDAN_PARAMETRS } from '../../data/constants';
-import { edenRequest, createNewQuery, getQueriesList, deleteQueryById } from '../../helper/api';
+import { edenRequest, edenResults, createNewQuery, getQueriesList, deleteQueryById, updateQuerieStatus } from '../../helper/api';
 
 import './RecognizePage.scss';
 import Input from '../../components/Input/Input';
@@ -114,8 +114,12 @@ const RecognizePage = () => {
         setLoadedQueries([]);
     };
 
-    const handleResultQuery = (qid) => {
-
+    const handleResultQuery = async (qid) => {
+        const edenResultResponse = await edenResults(qid);
+        console.log(edenResultResponse);
+        const status = edenResultResponse.data.status
+        const updateStatus = await updateQuerieStatus(qid, status);
+        getLoadedQueriesList();
     }
 
     const handleDeleteQuery = async (qid) => {
@@ -129,6 +133,8 @@ const RecognizePage = () => {
             console.error(`Failed to delete query with ID ${qid}: ${err.message}`);
         }
     };
+
+
 
     return (
         <section className='recognize'>
