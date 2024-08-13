@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { MdOutlineWavingHand } from "react-icons/md";
 import { AuthContext } from '../../helper/AuthContext';
 import { AUTH_MODES, AUTH_HEADING } from '../../data/constants';
-import { validation } from '../../helper/validator.js';
+import { validation } from '../../helper/Validator.js';
 import { login, signup } from '../../helper/api';
 
 import './AuthPage.scss';

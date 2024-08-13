@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 
 import { AuthContext } from '../../helper/AuthContext';
-import { validationRecognize } from '../../helper/validator';
+import { validationRecognize } from '../../helper/Validator';
 import { EDAN_PARAMETRS, BTN_ACTION } from '../../data/constants';
 import { edenRequest, edenResults, createNewQuery, getQueriesList, deleteQueryById, updateQuerieStatus } from '../../helper/api';
 import { sortQueriesByStatus } from '../../helper/utils'
