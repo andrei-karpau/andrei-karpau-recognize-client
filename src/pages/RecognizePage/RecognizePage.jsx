@@ -1,36 +1,65 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import { AuthContext } from '../../helper/AuthContext';
 import { validationRecognize } from '../../helper/validator';
 import { EDAN_PARAMETRS } from '../../data/constants';
-import { edenRequest, createNewTask } from '../../helper/api';
+import { edenRequest, createNewQuery, getQueriesList } from '../../helper/api';
 
 import './RecognizePage.scss';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
-
-
+import Navigation from '../../components/Navigation/Navigation';
+import QueriesList from '../../components/QueriesList/QueriesList';
 
 const RecognizePage = () => {
     const { authState, setAuthState } = useContext(AuthContext);
     const { userId } = authState;
 
+    const [loadedQueries, setLoadedQueries] = useState([]);
+
     const [errors, setErrors] = useState({});
     const [isValid, setIsValid] = useState(false);
     const [formData, setFormData] = useState({ file: '', query: '' });
+    const [inputKey, setInputKey] = useState();
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+
+    useEffect(() => {
+        const getLoadedQueriesList = async () => {
+            try {
+                const response = await getQueriesList(userId);
+                console.log(response)
+                setLoadedQueries(response.data.queries);
+            } catch (err) {
+                console.log(`Failed to load queries list: ${err}`);
+            }
+        };
+
+        getLoadedQueriesList();
+    }, [userId]);
+
+    console.log(loadedQueries)
 
     const validationInput = (values) => {
         const errors = validationRecognize(values);
         setErrors(errors);
-
         setIsValid(prevIsValid => {
             const hasErrors = Object.keys(errors).length > 0;
             return !hasErrors;
         });
-    }
+    };
+
+    const resetsInputs = () => {
+        let randomString = Math.random().toString(36);
+        setInputKey(randomString);
+        setFormData((prevFormData) => ({...prevFormData, file: '', query: ''}));
+    };
+
     const handleOnChange = (e) => {
         const { id, value, files } = e.target;
         setFormData((prevFormData) => ({...prevFormData, [id]: id === 'file' ? files[0] : value}));
+        validationInput(formData);
     };
 
     const handleBlur = () => {
@@ -44,35 +73,56 @@ const RecognizePage = () => {
         if (!isValid) return;
 
         try {
-            const formData = new FormData();
-            formData.append('providers', EDAN_PARAMETRS.providers.amazon);
-            formData.append('providers', EDAN_PARAMETRS.providers.extracta);
-            formData.append("file", formData.file);
-            formData.append("queries", JSON.stringify([{ query: `${formData.query}`, pages: EDAN_PARAMETRS.pages },]));
+            const form = new FormData();
+            form.append('providers', EDAN_PARAMETRS.providers.amazon);
+            form.append('providers', EDAN_PARAMETRS.providers.extracta);
+            form.append('file', formData.file);
+            form.append('queries', JSON.stringify([{ query: `${formData.query}`, pages: EDAN_PARAMETRS.pages },]));
             
-            const edenResponse = await edenRequest(formData);
-            const newTaskResponse = await createNewTask({
-                title: formData.query,
-                userId: userId,
-                error: edenResponse.error,
-                public_id: edenResponse.public_id,
-                status: edenResponse.status,
-                fileName: formData.file
-            });
-            console.log(edenResponse)
-            console.log(newTaskResponse)
+            const edenResponse = await edenRequest(form);
 
+            if(edenResponse && !edenResponse.error) {
+                const { public_id, status, error } = edenResponse;
 
-      
+                const newQueries = await createNewQuery({
+                    title: formData.query,
+                    userId: userId,
+                    error,
+                    public_id,
+                    status,
+                    fileName: formData.file.name
+                });
 
-          } catch (err) {
+                resetsInputs();
+                setLoadedQueries(newQueries.queries);
+            } else {
+                console.error('Error in Eden response:', edenResponse.error);
+            }
+        } catch (err) {
             console.log(err);
-          }
+        }
     }
+
+    const handleSearch = (term) => {
+        console.log(term)
+        setSearchTerm(term);
+    };
+
+    const handleStatusChange = (status) => {
+        console.log(status)
+        setStatusFilter(status);
+    };
+
+    const handleDeleteAll = () => {
+        setLoadedQueries([]);
+    };
+
+
+
 
     return (
         <section className='recognize'>
-            <h1 className='recognize__heading'>Recognize youe record</h1>
+            <h1 className='recognize__heading'>Recognize your record</h1>
              <form className='recognize__form'>
                 <Input 
                     id='file' 
@@ -83,6 +133,7 @@ const RecognizePage = () => {
                     onChange={handleOnChange}
                     onBlur={handleBlur}
                     error={errors.file}
+                    key={inputKey || '' }
                 />
                 <Input 
                     id='query' 
@@ -103,18 +154,24 @@ const RecognizePage = () => {
                     Launch
                 </Button>
             </form>
-             <div>
-                <h2>Results</h2>
-                <input type='text' placeholder='Search by name'/>
-                <ul>
-                    <li>
-                        <div>Name</div>
-                        <div>Status</div>
-                        <button>Results</button>
-                    </li>
-                </ul>
-             </div>
-
+            <div className='recognize__divider'></div>
+            <div className='recognize__results-wrapper'>
+                <h2 className='recognize__subheading'>Results</h2>
+                {loadedQueries.length === 0 && (
+                <div className='recognize__container-message'>
+                    <p className='recognize__text-message'>Your Queries List is empty</p>
+                </div>)}
+                {loadedQueries.length !== 0 && 
+                <>
+                    <Navigation 
+                        onSearch={handleSearch} 
+                        onStatusChange={handleStatusChange} 
+                        onDeleteAll={handleDeleteAll}
+                    />
+                    <QueriesList filtredQueries={loadedQueries}/>
+                </>
+                }
+            </div>
         </section>
     );
 };

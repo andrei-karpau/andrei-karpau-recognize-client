@@ -10,4 +10,6 @@ export const signup = (username, email, password) => axios.post(`${API_URL}/user
 
 export const edenRequest = (data) => axios.post(EDEN_URL, data, { headers: {Authorization: `Bearer ${EDEN_KEY}`}});
 
-export const createNewTask = (opts) => axios.post(`${API_URL}/queries/new`,opts);
+export const createNewQuery = (opts) => axios.post(`${API_URL}/queries/new`,opts);
+
+export const getQueriesList = (uid) => axios.get(`${API_URL}/queries/${uid}`);

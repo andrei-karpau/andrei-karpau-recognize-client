@@ -34,6 +34,23 @@
     &[type="password"] {
         padding-right: 2rem;
     }
+
+    &[type='file']{
+        width: 100%;
+        padding: 2rem;
+        border: 2px dotted $border-input;
+
+        &::file-selector-button {
+            cursor: pointer;
+            font-family: Montserrat,sans-serif;
+            @include font-stack(null, .76rem, 400, 1.5rem, $primary-btn);
+            border: none;
+            padding: .5rem 1rem;
+            border-radius: 5px;
+            background-color: bg-primary-btn;
+            transition: 1s;
+        }
+    }
 }
 
 .error-message {

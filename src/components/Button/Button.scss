@@ -20,22 +20,28 @@
         text-align: center;
         vertical-align: middle;
 
-        &:hover {
+        &:hover{
             color: $primary-btn;
             background-color: $bg-hover-primary-btn;
             border-color: $bg-hover-primary-btn;
         }
+
+        &[disabled] {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
     }
 
     &__secondary {
-        background-color: $bg-secondary-btn;
-        border-color: $bg-secondary-btn;
         color: $bg-input;
-        
-        &:hover {
-            color: $bg-input;
-            background-color: $bg-hover-secondary-btn;
-            border-color: $bg-hover-secondary-btn;
+        background-color: $bg-hover-secondary-btn;
+        border-color: $bg-hover-secondary-btn;
+
+        &[disabled] {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
         }
     }
 

@@ -4,9 +4,6 @@
 
 
 .authpage {
-    padding: 1rem;
-    @include flex(space-between, center, column, nowrap);
-
     &__heading {
         text-align: center;
         width: 100%;
